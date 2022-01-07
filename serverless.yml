@@ -11,13 +11,13 @@ provider:
       Resource: "arn:aws:dynamodb:us-east-1:705403512590:table/users"
 
 functions:
-  createTodo:
+  createUser:
     handler: create.run
     events:
       - http:
           path: users
           method: post
-  getTodo:
+  getUser:
     handler: get.run
     events:
       - http:

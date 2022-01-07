@@ -93,16 +93,16 @@
               }
             }
           },
-          "CreateTodoLogGroup": {
+          "CreateUserLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/my-app-dev-createTodo"
+              "LogGroupName": "/aws/lambda/my-app-dev-createUser"
             }
           },
-          "GetTodoLogGroup": {
+          "GetUserLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/my-app-dev-getTodo"
+              "LogGroupName": "/aws/lambda/my-app-dev-getUser"
             }
           },
           "IamRoleLambdaExecution": {
@@ -185,18 +185,18 @@
               }
             }
           },
-          "CreateTodoLambdaFunction": {
+          "CreateUserLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/my-app/dev/1641558625410-2022-01-07T12:30:25.410Z/my-app.zip"
+                "S3Key": "serverless/my-app/dev/1641559290131-2022-01-07T12:41:30.131Z/my-app.zip"
               },
               "Handler": "create.run",
               "Runtime": "nodejs14.x",
-              "FunctionName": "my-app-dev-createTodo",
+              "FunctionName": "my-app-dev-createUser",
               "MemorySize": 1024,
               "Timeout": 6,
               "Role": {
@@ -207,21 +207,21 @@
               }
             },
             "DependsOn": [
-              "CreateTodoLogGroup"
+              "CreateUserLogGroup"
             ]
           },
-          "GetTodoLambdaFunction": {
+          "GetUserLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/my-app/dev/1641558625410-2022-01-07T12:30:25.410Z/my-app.zip"
+                "S3Key": "serverless/my-app/dev/1641559290131-2022-01-07T12:41:30.131Z/my-app.zip"
               },
               "Handler": "get.run",
               "Runtime": "nodejs14.x",
-              "FunctionName": "my-app-dev-getTodo",
+              "FunctionName": "my-app-dev-getUser",
               "MemorySize": 1024,
               "Timeout": 6,
               "Role": {
@@ -232,27 +232,27 @@
               }
             },
             "DependsOn": [
-              "GetTodoLogGroup"
+              "GetUserLogGroup"
             ]
           },
-          "CreateTodoLambdaVersionZqlyG5BEDeXrTKSNkjOY8wfEXeRkHhYuZpfL99T6eeY": {
+          "CreateUserLambdaVersionbNIYSCQFqyRpnpGvrhZSk720LoO9EsnCesGHdhO8aU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "CreateTodoLambdaFunction"
+                "Ref": "CreateUserLambdaFunction"
               },
-              "CodeSha256": "gEiq/LHdhnMSha0PRhIw6/NjJJToOWXjmJ+xtztOrn0="
+              "CodeSha256": "QwOmEC/T+wfa8Qe9WvdY1Ck9dhB7cX/LopXnFXARkYQ="
             }
           },
-          "GetTodoLambdaVersionfgGqJsIpLvFFY5hGNuuSuDjApZn8MXZmYiTqAGCIA": {
+          "GetUserLambdaVersionTDF6XAxVLwgAv4enGQuxpZACyXhmFyWULFKniuCdcM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "GetTodoLambdaFunction"
+                "Ref": "GetUserLambdaFunction"
               },
-              "CodeSha256": "gEiq/LHdhnMSha0PRhIw6/NjJJToOWXjmJ+xtztOrn0="
+              "CodeSha256": "QwOmEC/T+wfa8Qe9WvdY1Ck9dhB7cX/LopXnFXARkYQ="
             }
           },
           "ApiGatewayRestApi": {
@@ -325,7 +325,7 @@
                       ":lambda:path/2015-03-31/functions/",
                       {
                         "Fn::GetAtt": [
-                          "CreateTodoLambdaFunction",
+                          "CreateUserLambdaFunction",
                           "Arn"
                         ]
                       },
@@ -337,7 +337,7 @@
               "MethodResponses": []
             },
             "DependsOn": [
-              "CreateTodoLambdaPermissionApiGateway"
+              "CreateUserLambdaPermissionApiGateway"
             ]
           },
           "ApiGatewayMethodUsersIdVarGet": {
@@ -371,7 +371,7 @@
                       ":lambda:path/2015-03-31/functions/",
                       {
                         "Fn::GetAtt": [
-                          "GetTodoLambdaFunction",
+                          "GetUserLambdaFunction",
                           "Arn"
                         ]
                       },
@@ -383,10 +383,10 @@
               "MethodResponses": []
             },
             "DependsOn": [
-              "GetTodoLambdaPermissionApiGateway"
+              "GetUserLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1641558622709": {
+          "ApiGatewayDeployment1641559287223": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -399,12 +399,12 @@
               "ApiGatewayMethodUsersIdVarGet"
             ]
           },
-          "CreateTodoLambdaPermissionApiGateway": {
+          "CreateUserLambdaPermissionApiGateway": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
               "FunctionName": {
                 "Fn::GetAtt": [
-                  "CreateTodoLambdaFunction",
+                  "CreateUserLambdaFunction",
                   "Arn"
                 ]
               },
@@ -436,12 +436,12 @@
               }
             }
           },
-          "GetTodoLambdaPermissionApiGateway": {
+          "GetUserLambdaPermissionApiGateway": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
               "FunctionName": {
                 "Fn::GetAtt": [
-                  "GetTodoLambdaFunction",
+                  "GetUserLambdaFunction",
                   "Arn"
                 ]
               },
@@ -505,22 +505,22 @@
               "Name": "sls-my-app-dev-ServerlessDeploymentBucketName"
             }
           },
-          "CreateTodoLambdaFunctionQualifiedArn": {
+          "CreateUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateTodoLambdaVersionZqlyG5BEDeXrTKSNkjOY8wfEXeRkHhYuZpfL99T6eeY"
+              "Ref": "CreateUserLambdaVersionbNIYSCQFqyRpnpGvrhZSk720LoO9EsnCesGHdhO8aU"
             },
             "Export": {
-              "Name": "sls-my-app-dev-CreateTodoLambdaFunctionQualifiedArn"
+              "Name": "sls-my-app-dev-CreateUserLambdaFunctionQualifiedArn"
             }
           },
-          "GetTodoLambdaFunctionQualifiedArn": {
+          "GetUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetTodoLambdaVersionfgGqJsIpLvFFY5hGNuuSuDjApZn8MXZmYiTqAGCIA"
+              "Ref": "GetUserLambdaVersionTDF6XAxVLwgAv4enGQuxpZACyXhmFyWULFKniuCdcM"
             },
             "Export": {
-              "Name": "sls-my-app-dev-GetTodoLambdaFunctionQualifiedArn"
+              "Name": "sls-my-app-dev-GetUserLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -637,7 +637,7 @@
     },
     "pluginsData": {},
     "functions": {
-      "createTodo": {
+      "createUser": {
         "handler": "create.run",
         "events": [
           {
@@ -648,15 +648,15 @@
             }
           }
         ],
-        "name": "my-app-dev-createTodo",
+        "name": "my-app-dev-createUser",
         "package": {},
         "memory": 1024,
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "CreateTodoLambdaVersionZqlyG5BEDeXrTKSNkjOY8wfEXeRkHhYuZpfL99T6eeY"
+        "versionLogicalId": "CreateUserLambdaVersionbNIYSCQFqyRpnpGvrhZSk720LoO9EsnCesGHdhO8aU"
       },
-      "getTodo": {
+      "getUser": {
         "handler": "get.run",
         "events": [
           {
@@ -667,13 +667,13 @@
             }
           }
         ],
-        "name": "my-app-dev-getTodo",
+        "name": "my-app-dev-getUser",
         "package": {},
         "memory": 1024,
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "GetTodoLambdaVersionfgGqJsIpLvFFY5hGNuuSuDjApZn8MXZmYiTqAGCIA"
+        "versionLogicalId": "GetUserLambdaVersionTDF6XAxVLwgAv4enGQuxpZACyXhmFyWULFKniuCdcM"
       }
     },
     "resources": {
@@ -724,7 +724,7 @@
     "artifact": "D:\\serverless-framework-course-master\\serverless-framework-course-master\\lesson-7\\.serverless\\my-app.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/my-app/dev/1641558625410-2022-01-07T12:30:25.410Z",
+    "artifactDirectoryName": "serverless/my-app/dev/1641559290131-2022-01-07T12:41:30.131Z",
     "artifact": "my-app.zip"
   }
 }
