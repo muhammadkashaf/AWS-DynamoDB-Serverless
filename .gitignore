@@ -1,5 +1,2 @@
 # Node package directories
 node_modules
-
-# Serverless Framework directories
-serverless
