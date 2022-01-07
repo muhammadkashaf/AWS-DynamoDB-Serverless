@@ -4,7 +4,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.run = async (event, context, callback) => {
   const params = {
-    TableName: "users",
+    TableName: "users", 
     Key: {
       id: event.pathParameters.id
     }
