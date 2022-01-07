@@ -1,6 +1,7 @@
 "AWS-DynamoDB-Serverless" 
 
 ..................................................
+
 Service Information
 
 service: my-app
