@@ -17,6 +17,7 @@ api keys:
   None
   
 endpoints:
+  
   POST - https://h93jwe5g3b.execute-api.us-east-1.amazonaws.com/dev/users
   
   GET - https://h93jwe5g3b.execute-api.us-east-1.amazonaws.com/dev/users/{id}
