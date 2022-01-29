@@ -1,43 +1,116 @@
 service: my-app
 
+plugins:
+  - serverless-appsync-plugin
+
 provider:
   name: aws
   runtime: nodejs14.x
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:PutItem
-        - dynamodb:GetItem
-      Resource: "arn:aws:dynamodb:us-east-1:705403512590:table/users"
+  region: eu-west-1
+  profile: test_user
 
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource:
+            - !GetAtt DemoTable.Arn
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+          Resource:
+            - Fn::Join:
+                - '/'
+                - - !GetAtt DemoTable.Arn
+                  - 'index/*'
 functions:
   createUser:
     handler: create.run
-    events:
-      - http:
-          path: users
-          method: post
+    
   getUser:
     handler: get.run
     events:
       - http:
           path: users/{id}
           method: get
+          cors: true
+custom:
+  appSync:
+    name: my-app
+    authenticationType: API_KEY
+    schema: schema.graphql
+    mappingTemplates:
+      - dataSource: DemoLambda
+        type: Query
+        field: getUser
+        request: "getUser-request.vtl"
+        response: "getUser-response.vtl"
+      - dataSource: DemoLambda
+        type: Mutation
+        field: createUser
+        request: "createUser-request.vtl"
+        response: "createUser-response.vtl"
+      - dataSource: DemoLambda
+        type: Mutation
+        field: updateUser
+        request: "updateUser-request.vtl"
+        response: "updateUser-response.vtl"
+      - dataSource: DemoLambda
+        type: Mutation
+        field: deleteUser
+        request: "deleteUser-request.vtl"
+        response: "deleteUser-response.vtl"
+    dataSources:
+      - type: AMAZON_DYNAMODB
+        name: DEMO_DB
+        config:
+          tableName: !Ref DemoTable
+          iamRoleStatements:
+            - Effect: 'Allow'
+              Action:
+                - 'dynamodb:*'
+              Resource:
+                - Fn::GetAtt: [DemoTable, Arn]
+            - Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource:
+                - Fn::Join:
+                    - '/'
+                    - - !GetAtt DemoTable.Arn
+                      - 'index/*'
+      - type: AWS_LAMBDA
+        name: DemoLambda
+        config:
+          functionName: createUser
 
 resources:
   Resources:
-    TodosDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
+    # DynamoDB
+    DemoTable:
+      Type: AWS::DynamoDB::Table
       Properties:
+        TableName: DemoTable
+        BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
-          -
-            AttributeName: id
-            AttributeType: S
+          - AttributeName: 'id'
+            AttributeType: 'S'
         KeySchema:
-          -
-            AttributeName: id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: users
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+    AppSyncDynamodbServiceRole:
+      Type: "AWS::IAM::Role"
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service:
+                  - "appsync.amazonaws.com"
+              Action:
+                - "sts:AssumeRole"
+                
+    
