@@ -16,83 +16,198 @@ provider:
           Action:
             - dynamodb:*
           Resource:
-            - !GetAtt DemoTable.Arn
+            - !GetAtt UsersTable.Arn
+            - !GetAtt BooksTable.Arn
+            - !GetAtt AuthorsTable.Arn
         - Effect: Allow
           Action:
             - dynamodb:Query
           Resource:
             - Fn::Join:
                 - '/'
-                - - !GetAtt DemoTable.Arn
+                - - !GetAtt UsersTable.Arn
+                  - 'index/*'
+            - Fn::Join:
+                - '/'
+                - - !GetAtt BooksTable.Arn
+                  - 'index/*'
+            - Fn::Join:
+                - '/'
+                - - !GetAtt AuthorsTable.Arn
                   - 'index/*'
 functions:
-  createUser:
-    handler: create.run
-    
-  getUser:
-    handler: get.run
-    events:
-      - http:
-          path: users/{id}
-          method: get
-          cors: true
+  usersFunction:
+    handler: src/function/users/users.run
+  booksFunction:
+    handler: src/function/books/books.run
+  authorsFunction:
+    handler: src/function/authors/authors.run
+
 custom:
   appSync:
     name: my-app
     authenticationType: API_KEY
-    schema: schema.graphql
+    schema: src/schema/schema.graphql
     mappingTemplates:
-      - dataSource: DemoLambda
+      - dataSource: UsersLambda
         type: Query
         field: getUser
-        request: "getUser-request.vtl"
-        response: "getUser-response.vtl"
-      - dataSource: DemoLambda
+        request: "lambda-templates/users/getUser-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: UsersLambda
         type: Mutation
         field: createUser
-        request: "createUser-request.vtl"
-        response: "createUser-response.vtl"
-      - dataSource: DemoLambda
+        request: "lambda-templates/users/createUser-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: UsersLambda
         type: Mutation
         field: updateUser
-        request: "updateUser-request.vtl"
-        response: "updateUser-response.vtl"
-      - dataSource: DemoLambda
+        request: "lambda-templates/users/updateUser-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: UsersLambda
         type: Mutation
         field: deleteUser
-        request: "deleteUser-request.vtl"
-        response: "deleteUser-response.vtl"
+        request: "lambda-templates/users/deleteUser-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+
+      - dataSource: BooksLambda
+        type: Query
+        field: getBook
+        request: "lambda-templates/books/getBook-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: BooksLambda
+        type: Mutation
+        field: createBook
+        request: "lambda-templates/books/createBook-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: BooksLambda
+        type: Mutation
+        field: updateBook
+        request: "lambda-templates/books/updateBook-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: BooksLambda
+        type: Mutation
+        field: deleteBook
+        request: "lambda-templates/books/deleteBook-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+
+      - dataSource: AuthorsLambda
+        type: Query
+        field: getAuthor
+        request: "lambda-templates/authors/getAuthor-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: AuthorsLambda
+        type: Mutation
+        field: createAuthor
+        request: "lambda-templates/authors/createAuthor-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: AuthorsLambda
+        type: Mutation
+        field: updateAuthor
+        request: "lambda-templates/authors/updateAuthor-request.vtl"
+        response: "lambda-templates/common/response.vtl"
+      - dataSource: AuthorsLambda
+        type: Mutation
+        field: deleteAuthor
+        request: "lambda-templates/authors/deleteAuthor-request.vtl"
+        response: "lambda-templates/common/response.vtl"
     dataSources:
       - type: AMAZON_DYNAMODB
         name: DEMO_DB
         config:
-          tableName: !Ref DemoTable
+          tableName: !Ref UsersTable
           iamRoleStatements:
             - Effect: 'Allow'
               Action:
                 - 'dynamodb:*'
               Resource:
-                - Fn::GetAtt: [DemoTable, Arn]
+                - Fn::GetAtt: [UsersTable, Arn]
             - Effect: Allow
               Action:
                 - dynamodb:*
               Resource:
                 - Fn::Join:
                     - '/'
-                    - - !GetAtt DemoTable.Arn
+                    - - !GetAtt UsersTable.Arn
+                      - 'index/*'
+      - type: AMAZON_DYNAMODB
+        name: BOOKS_DB
+        config:
+          tableName: !Ref BooksTable
+          iamRoleStatements:
+            - Effect: 'Allow'
+              Action:
+                - 'dynamodb:*'
+              Resource:
+                - Fn::GetAtt: [BooksTable, Arn]
+            - Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource:
+                - Fn::Join:
+                    - '/'
+                    - - !GetAtt BooksTable.Arn
+                      - 'index/*'
+      - type: AMAZON_DYNAMODB
+        name: AUTHORS_DB
+        config:
+          tableName: !Ref AuthorsTable
+          iamRoleStatements:
+            - Effect: 'Allow'
+              Action:
+                - 'dynamodb:*'
+              Resource:
+                - Fn::GetAtt: [AuthorsTable, Arn]
+            - Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource:
+                - Fn::Join:
+                    - '/'
+                    - - !GetAtt AuthorsTable.Arn
                       - 'index/*'
       - type: AWS_LAMBDA
-        name: DemoLambda
+        name: UsersLambda
         config:
-          functionName: createUser
+          functionName: usersFunction
+      - type: AWS_LAMBDA
+        name: BooksLambda
+        config:
+          functionName: booksFunction
+      - type: AWS_LAMBDA
+        name: AuthorsLambda
+        config:
+          functionName: authorsFunction
 
 resources:
   Resources:
     # DynamoDB
-    DemoTable:
+    UsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: DemoTable
+        TableName: UsersTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+    BooksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: BooksTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: 'id'
+            AttributeType: 'S'
+        KeySchema:
+          - AttributeName: 'id'
+            KeyType: 'HASH'
+    AuthorsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: AuthorsTable
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: 'id'

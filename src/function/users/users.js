@@ -20,20 +20,6 @@ module.exports.run = async function (event) {
         'Invalid Request'
       )
   }
-
-
-//   const data = JSON.parse(event.body);
-//  const result = await createItem(data);
-
-//   return {
-//     statusCode: 200,
-//     headers: {
-//       'Access-Control-Allow-Origin': '*',
-//       'Access-Control-Allow-Headers': 'x-requested-with',
-//       'Access-Control-Allow-Credentials': true
-//   },
-//     body: JSON.stringify(result)
-//   };
 };
 
 
@@ -45,7 +31,7 @@ const createUser = async (data) => {
 const createItem = (data) => {
   return new Promise((resolve, reject) => {
     const params = {
-      TableName: "DemoTable",
+      TableName: "UsersTable",
       Item: {
         id: uuid(),
         text: data.text,
@@ -72,7 +58,7 @@ const getUsers = async (data) => {
 const getItem = (data) => {
   return new Promise((resolve, reject) => {
     const params = {
-      TableName: "DemoTable", 
+      TableName: "UsersTable", 
       Key: {
         id: data,
       }
@@ -100,7 +86,7 @@ const updateUsers = async (data) => {
 const UpdateItem = (data) => {
   return new Promise((resolve, reject) => {
     const params = {
-      TableName: "DemoTable", 
+      TableName: "UsersTable", 
       Key: {
         id: data.id,
       },
@@ -136,7 +122,7 @@ const deleteUsers = async (data) => {
 const deleteItem = (data) => {
   return new Promise((resolve, reject) => {
     const params = {
-      TableName: "DemoTable", 
+      TableName: "UsersTable", 
       Key: {
         id: data,
       }

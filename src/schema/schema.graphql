@@ -1,0 +1,87 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+#  Users schema
+
+input CreateUserInput {
+    text: String!
+}
+input UpdateUserInput {
+    id: ID!
+    text: String!
+}
+input deleteUserInput {
+    id: ID!
+}
+
+type Demo {
+    id: ID
+    text: String
+}
+
+type Query {
+    getUser(id: ID!): Demo
+}
+
+
+# Books schema
+
+input CreateBookInput {
+    book: String!
+}
+input UpdateBookInput {
+    id: ID!
+    book: String!
+}
+input deleteBookInput {
+    id: ID!
+}
+
+type Books {
+    id: ID
+    book: String
+}
+
+type Query {
+    getBook(id: ID!): Books
+}
+
+
+
+# Authors schema
+
+input CreateAuthorInput {
+    author: String!
+}
+input UpdateAuthorInput {
+    id: ID!
+    author: String!
+}
+input deleteAuthorInput {
+    id: ID!
+}
+
+type Authors {
+    id: ID
+    author: String
+}
+
+type Query {
+    getAuthor(id: ID!): Authors
+}
+        
+type Mutation {
+    createUser(input: CreateUserInput): Demo
+    updateUser(input: UpdateUserInput): Demo
+    deleteUser(input: deleteUserInput): Demo
+
+    createBook(input: CreateBookInput): Books
+    updateBook(input: UpdateBookInput): Books
+    deleteBook(input: deleteBookInput): Books
+
+    createAuthor(input: CreateAuthorInput): Authors
+    updateAuthor(input: UpdateAuthorInput): Authors
+    deleteAuthor(input: deleteAuthorInput): Authors
+}
